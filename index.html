@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#220000">
+<title>ルミちゃんの永久革命 MOBILE ILLUSTRATED</title>
+
+<style>
+html,body{
+margin:0;
+padding:0;
+background:#000;
+color:#ff4040;
+font-family:monospace;
+height:100%;
+overflow:hidden;
+}
+
+body{
+background-image:
+repeating-linear-gradient(
+to bottom,
+rgba(255,255,255,0.03) 0px,
+rgba(255,255,255,0.03) 1px,
+transparent 2px,
+transparent 4px
+);
+}
+
+#app{
+height:100%;
+overflow-y:auto;
+padding:12px;
+box-sizing:border-box;
+}
+
+.box{
+border:2px solid #ff4040;
+background:rgba(20,0,0,0.88);
+padding:12px;
+margin-bottom:12px;
+border-radius:12px;
+box-shadow:0 0 10px rgba(255,0,0,0.25);
+}
+
+.title{
+font-size:24px;
+text-align:center;
+animation:blink 1.2s infinite;
+}
+
+.small{
+font-size:12px;
+color:#ff9999;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:8px;
+background:#000;
+color:#ff4040;
+border:2px solid #ff4040;
+border-radius:10px;
+font-size:16px;
+}
+
+button:active{
+background:#400;
+transform:scale(0.985);
+}
+
+.meter{
+width:100%;
+height:14px;
+background:#220000;
+border:1px solid #ff4040;
+border-radius:8px;
+overflow:hidden;
+margin-bottom:10px;
+}
+
+.fill{
+height:100%;
+background:#ff4040;
+transition:width .25s;
+}
+
+.hero-wrap{
+position:relative;
+overflow:hidden;
+border-radius:12px;
+border:2px solid #ff4040;
+background:#050000;
+}
+
+.hero{
+display:block;
+width:100%;
+height:auto;
+}
+
+.hero-caption{
+position:absolute;
+left:8px;
+bottom:8px;
+right:8px;
+padding:6px 8px;
+background:rgba(0,0,0,0.62);
+border:1px solid rgba(255,64,64,0.8);
+font-size:12px;
+color:#ffb0b0;
+}
+
+@keyframes blink{
+50%{opacity:0.35;}
+}
+
+.log{
+font-size:13px;
+color:#ffaaaa;
+}
+
+.route{
+color:#ff8080;
+}
+
+#trotsky{
+position:fixed;
+bottom:6px;
+right:10px;
+font-size:10px;
+opacity:0.35;
+color:#ff6666;
+pointer-events:none;
+z-index:99;
+}
+</style>
+</head>
+
+<body>
+<div id="app">
+
+<div class="box title">
+ルミちゃんの永久革命<br>
+<span class="small">ANDROID / iPhone 両対応 イラスト組込版</span>
+</div>
+
+<div class="box hero-wrap">
+<img class="hero" src="assets/lumichan.jpg" alt="ルミちゃん風アニメイラスト">
+<div class="hero-caption">高卒プロレタリアート帰還 / 黒背景赤文字文化財</div>
+</div>
+
+<div class="box">
+革命度: <span id="revText">60</span>%
+<div class="meter"><div class="fill" id="revBar" style="width:60%"></div></div>
+
+湿度: <span id="humText">70</span>%
+<div class="meter"><div class="fill" id="humBar" style="width:70%"></div></div>
+
+正気度: <span id="sanText">55</span>%
+<div class="meter"><div class="fill" id="sanBar" style="width:55%"></div></div>
+
+ルート:
+<span class="route" id="routeText">未確定</span>
+</div>
+
+<div class="box" id="story"></div>
+
+<div class="box" id="choices"></div>
+
+<div class="box log">
+WARNING : 永久革命進行中...<br>
+「革命にも兵站は必要なのよ」
+</div>
+
+</div>
+
+<div id="trotsky">☭ Trotsky watching...</div>
+
+<script>
+let state = {
+rev:60,
+hum:70,
+san:55,
+route:"未確定",
+scene:"start"
+};
+
+const scenes = {
+start:{
+text:"21:13 沼南エリカマンション。<br><br>ルミちゃんが帰還した。<br><br>『ただいま……高卒プロレタリアート帰還しました』",
+choices:[
+{t:"🍞 パンを差し出す",n:"bread",r:5,h:4,s:10,route:"生活兵站派"},
+{t:"☭ 第四インターMIDIを流す",n:"midi",r:16,h:7,s:-8,route:"革命過激派"},
+{t:"🏪 深夜コンビニへ行く",n:"night",r:2,h:10,s:6,route:"夜間補給派"}
+]
+},
+
+bread:{
+text:"『革命にも糖質は必要なのよ』<br><br>ルミちゃんは少し笑った。",
+choices:[
+{t:"☕ 温かい飲み物を入れる",n:"good",r:2,h:6,s:12,route:"生活兵站派"},
+{t:"📻 さらに軍歌MIDIを流す",n:"midi",r:14,h:6,s:-6,route:"革命過激派"}
+]
+},
+
+midi:{
+text:"圧縮MIDI音源が鳴り響く。<br><br>黒背景赤文字の空気が部屋を支配した。<br><br>『第四インターナショナル万歳！』",
+choices:[
+{t:"🔥 革命演説を続ける",n:"red",r:24,h:8,s:-15,route:"革命過激派"},
+{t:"🧯 いったん落ち着く",n:"good",r:-6,h:-2,s:12,route:"生活兵站派"}
+]
+},
+
+night:{
+text:"深夜コンビニの蛍光灯。<br><br>『この光、資本主義なのに優しいね』",
+choices:[
+{t:"📸 写真を撮る",n:"archive",r:5,h:5,s:5,route:"地下個人サイト派"},
+{t:"🏠 帰って寝る",n:"good",r:-2,h:4,s:10,route:"生活兵站派"}
+]
+},
+
+archive:{
+text:"HTMLファイルが保存された。<br><br>2039年、怪文書遺産として再発見される。",
+choices:[
+{t:"💾 ARCHIVE END",n:"archiveEnd",r:0,h:0,s:0,route:"地下個人サイト派"}
+]
+},
+
+red:{
+text:"革命度が危険域へ到達。<br><br>赤文字が画面全体を覆う。",
+choices:[
+{t:"☭ 永久革命を継続",n:"true",r:30,h:10,s:-20,route:"革命過激派"},
+{t:"🧯 緊急停止",n:"good",r:-10,h:-5,s:10,route:"生活兵站派"}
+]
+},
+
+good:{
+text:"【GOOD END】<br><br>革命は延期された。<br><br>だが補給線は維持された。",
+choices:[
+{t:"🔁 最初から",n:"reset",r:0,h:0,s:0}
+]
+},
+
+true:{
+text:"【TRUE END】<br><br>永久革命達成。<br><br>第四インターナショナル万歳。",
+choices:[
+{t:"🔁 最初から",n:"reset",r:0,h:0,s:0}
+]
+},
+
+archiveEnd:{
+text:"【ARCHIVE END】<br><br>黒背景赤文字文化は、静かに保存された。",
+choices:[
+{t:"🔁 最初から",n:"reset",r:0,h:0,s:0}
+]
+}
+};
+
+function render(){
+document.getElementById("revText").innerText=state.rev;
+document.getElementById("humText").innerText=state.hum;
+document.getElementById("sanText").innerText=state.san;
+
+document.getElementById("revBar").style.width=state.rev+"%";
+document.getElementById("humBar").style.width=state.hum+"%";
+document.getElementById("sanBar").style.width=state.san+"%";
+
+document.getElementById("routeText").innerText=state.route;
+
+const sc=scenes[state.scene];
+document.getElementById("story").innerHTML=sc.text;
+
+let html="";
+sc.choices.forEach((c,i)=>{
+html+=`<button onclick="pick(${i})">${c.t}</button>`;
+});
+
+document.getElementById("choices").innerHTML=html;
+}
+
+function pick(i){
+const sc=scenes[state.scene];
+const c=sc.choices[i];
+
+if(c.n==="reset"){
+state={rev:60,hum:70,san:55,route:"未確定",scene:"start"};
+render();
+return;
+}
+
+state.rev+=c.r;
+state.hum+=c.h;
+state.san+=c.s;
+state.route=c.route || state.route;
+state.scene=c.n;
+
+state.rev=Math.max(0,Math.min(100,state.rev));
+state.hum=Math.max(0,Math.min(100,state.hum));
+state.san=Math.max(0,Math.min(100,state.san));
+
+render();
+
+if(navigator.vibrate){
+navigator.vibrate(35);
+}
+}
+
+render();
+</script>
+
+</body>
+</html>
