@@ -2,313 +2,380 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<meta name="theme-color" content="#220000">
-<title>ルミちゃんの永久革命 MOBILE ILLUSTRATED</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ルミちゃん革命戦線</title>
 <style>
-html,body{
-margin:0;
-padding:0;
-background:#000;
-color:#ff4040;
-font-family:monospace;
-height:100%;
-overflow:hidden;
-}
+  * { box-sizing: border-box; }
 
-body{
-background-image:
-repeating-linear-gradient(
-to bottom,
-rgba(255,255,255,0.03) 0px,
-rgba(255,255,255,0.03) 1px,
-transparent 2px,
-transparent 4px
-);
-}
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(180deg, #120909, #1a1a1a);
+    color: #f7f1e8;
+    text-align: center;
+  }
 
-#app{
-height:100%;
-overflow-y:auto;
-padding:12px;
-box-sizing:border-box;
-}
+  .game {
+    max-width: 760px;
+    margin: auto;
+    padding: 14px;
+    min-height: 100vh;
+  }
 
-.box{
-border:2px solid #ff4040;
-background:rgba(20,0,0,0.88);
-padding:12px;
-margin-bottom:12px;
-border-radius:12px;
-box-shadow:0 0 10px rgba(255,0,0,0.25);
-}
+  h1 {
+    font-size: 1.55rem;
+    margin: 12px 0 8px;
+    letter-spacing: 0.04em;
+  }
 
-.title{
-font-size:24px;
-text-align:center;
-animation:blink 1.2s infinite;
-}
+  .panel {
+    background: rgba(20, 20, 20, 0.88);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  }
 
-.small{
-font-size:12px;
-color:#ff9999;
-}
+  #mainImage {
+    display: block;
+    max-width: 100%;
+    max-height: 42vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 14px;
+    margin: 10px auto 14px;
+    background: #080808;
+  }
 
-button{
-width:100%;
-padding:14px;
-margin-top:8px;
-background:#000;
-color:#ff4040;
-border:2px solid #ff4040;
-border-radius:10px;
-font-size:16px;
-}
+  #status {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 8px 0 12px;
+    font-size: 0.9rem;
+  }
 
-button:active{
-background:#400;
-transform:scale(0.985);
-}
+  .stat {
+    background: #2a2020;
+    border-radius: 10px;
+    padding: 8px;
+  }
 
-.meter{
-width:100%;
-height:14px;
-background:#220000;
-border:1px solid #ff4040;
-border-radius:8px;
-overflow:hidden;
-margin-bottom:10px;
-}
+  #text {
+    background: #221919;
+    padding: 15px;
+    border-radius: 12px;
+    line-height: 1.75;
+    margin-bottom: 14px;
+    text-align: left;
+    white-space: pre-line;
+  }
 
-.fill{
-height:100%;
-background:#ff4040;
-transition:width .25s;
-}
+  .choices {
+    display: grid;
+    gap: 10px;
+  }
 
-.hero-wrap{
-position:relative;
-overflow:hidden;
-border-radius:12px;
-border:2px solid #ff4040;
-background:#050000;
-}
+  button {
+    width: 100%;
+    font-size: 16px;
+    padding: 14px;
+    border: 0;
+    border-radius: 12px;
+    background: #a00000;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+  }
 
-.hero{
-display:block;
-width:100%;
-height:auto;
-}
+  button:hover { filter: brightness(1.12); }
+  button:active { transform: scale(0.985); }
 
-.hero-caption{
-position:absolute;
-left:8px;
-bottom:8px;
-right:8px;
-padding:6px 8px;
-background:rgba(0,0,0,0.62);
-border:1px solid rgba(255,64,64,0.8);
-font-size:12px;
-color:#ffb0b0;
-}
-
-@keyframes blink{
-50%{opacity:0.35;}
-}
-
-.log{
-font-size:13px;
-color:#ffaaaa;
-}
-
-.route{
-color:#ff8080;
-}
-
-#trotsky{
-position:fixed;
-bottom:6px;
-right:10px;
-font-size:10px;
-opacity:0.35;
-color:#ff6666;
-pointer-events:none;
-z-index:99;
-}
+  .small {
+    margin-top: 12px;
+    opacity: 0.7;
+    font-size: 0.82rem;
+  }
 </style>
 </head>
-
 <body>
-<div id="app">
 
-<div class="box title">
-ルミちゃんの永久革命<br>
-<span class="small">ANDROID / iPhone 両対応 イラスト組込版</span>
+<div class="game">
+  <h1>ルミちゃん革命戦線 ☭</h1>
+
+  <div class="panel">
+    <img id="mainImage" src="assets/rumi.png" alt="main image">
+
+    <div id="status">
+      <div class="stat">好感度 <span id="like">0</span></div>
+      <div class="stat">兵站 <span id="supply">5</span></div>
+      <div class="stat">警戒 <span id="risk">0</span></div>
+    </div>
+
+    <div id="text"></div>
+    <div id="choices" class="choices"></div>
+  </div>
+
+  <div class="small">画像が出ない時は、assets/rumi.png の名前を確認。</div>
 </div>
-
-<div class="box hero-wrap">
-<img class="hero" src="assets/lumichan.jpg" alt="ルミちゃん風アニメイラスト">
-<div class="hero-caption">高卒プロレタリアート帰還 / 黒背景赤文字文化財</div>
-</div>
-
-<div class="box">
-革命度: <span id="revText">60</span>%
-<div class="meter"><div class="fill" id="revBar" style="width:60%"></div></div>
-
-湿度: <span id="humText">70</span>%
-<div class="meter"><div class="fill" id="humBar" style="width:70%"></div></div>
-
-正気度: <span id="sanText">55</span>%
-<div class="meter"><div class="fill" id="sanBar" style="width:55%"></div></div>
-
-ルート:
-<span class="route" id="routeText">未確定</span>
-</div>
-
-<div class="box" id="story"></div>
-
-<div class="box" id="choices"></div>
-
-<div class="box log">
-WARNING : 永久革命進行中...<br>
-「革命にも兵站は必要なのよ」
-</div>
-
-</div>
-
-<div id="trotsky">☭ Trotsky watching...</div>
 
 <script>
 let state = {
-rev:60,
-hum:70,
-san:55,
-route:"未確定",
-scene:"start"
+  like: 0,
+  supply: 5,
+  risk: 0
 };
 
 const scenes = {
-start:{
-text:"21:13 沼南エリカマンション。<br><br>ルミちゃんが帰還した。<br><br>『ただいま……高卒プロレタリアート帰還しました』",
-choices:[
-{t:"🍞 パンを差し出す",n:"bread",r:5,h:4,s:10,route:"生活兵站派"},
-{t:"☭ 第四インターMIDIを流す",n:"midi",r:16,h:7,s:-8,route:"革命過激派"},
-{t:"🏪 深夜コンビニへ行く",n:"night",r:2,h:10,s:6,route:"夜間補給派"}
-]
-},
+  start: {
+    text: "夜の街に赤い月が昇る。\n汝はルミちゃん革命戦線の臨時指揮官となった。\n初動を誤れば戦線は崩れる。",
+    choices: [
+      { text: "ルミちゃんに丁寧に挨拶する", next: "greet", like: 1 },
+      { text: "革命ビラを配る", next: "leaflet", risk: 1 },
+      { text: "補給線を確認する", next: "supplyCheck", supply: 1 },
+      { text: "いったん観察する", next: "observe" }
+    ]
+  },
 
-bread:{
-text:"『革命にも糖質は必要なのよ』<br><br>ルミちゃんは少し笑った。",
-choices:[
-{t:"☕ 温かい飲み物を入れる",n:"good",r:2,h:6,s:12,route:"生活兵站派"},
-{t:"📻 さらに軍歌MIDIを流す",n:"midi",r:14,h:6,s:-6,route:"革命過激派"}
-]
-},
+  greet: {
+    text: "ルミちゃんは静かに笑った。\n『同志、まずは信頼関係よ』\n前線に微風が吹く。",
+    choices: [
+      { text: "相手の話をよく聞く", next: "listen", like: 2 },
+      { text: "自分語りを始める", next: "selfTalk", risk: 1 },
+      { text: "軽い菓子を渡す", next: "smallGift", like: 1, supply: -1 },
+      { text: "戻る", next: "start" }
+    ]
+  },
 
-midi:{
-text:"圧縮MIDI音源が鳴り響く。<br><br>黒背景赤文字の空気が部屋を支配した。<br><br>『第四インターナショナル万歳！』",
-choices:[
-{t:"🔥 革命演説を続ける",n:"red",r:24,h:8,s:-15,route:"革命過激派"},
-{t:"🧯 いったん落ち着く",n:"good",r:-6,h:-2,s:12,route:"生活兵站派"}
-]
-},
+  listen: {
+    text: "聞く姿勢は強い。\n沈黙を恐れず、相手のテンポを待った。\nこれは会話の縦深防御である。",
+    choices: [
+      { text: "さらに質問する", next: "deepTalk", like: 2 },
+      { text: "冗談を入れる", next: "joke", risk: 1 },
+      { text: "今日は短く切り上げる", next: "goodEnd" }
+    ]
+  },
 
-night:{
-text:"深夜コンビニの蛍光灯。<br><br>『この光、資本主義なのに優しいね』",
-choices:[
-{t:"📸 写真を撮る",n:"archive",r:5,h:5,s:5,route:"地下個人サイト派"},
-{t:"🏠 帰って寝る",n:"good",r:-2,h:4,s:10,route:"生活兵站派"}
-]
-},
+  selfTalk: {
+    text: "やや喋りすぎた。\n情報量が多すぎて、前線通信が渋滞している。",
+    choices: [
+      { text: "素直に謝って聞き役に戻る", next: "listen", like: 1 },
+      { text: "さらに押す", next: "badEnd", risk: 2 },
+      { text: "撤退する", next: "retreat" }
+    ]
+  },
 
-archive:{
-text:"HTMLファイルが保存された。<br><br>2039年、怪文書遺産として再発見される。",
-choices:[
-{t:"💾 ARCHIVE END",n:"archiveEnd",r:0,h:0,s:0,route:"地下個人サイト派"}
-]
-},
+  smallGift: {
+    text: "軽い贈り物は成功。\n高価すぎないため、政治的負債にならなかった。",
+    choices: [
+      { text: "会話へ移行する", next: "listen", like: 1 },
+      { text: "さらに贈り物を重ねる", next: "heavyGift", supply: -2, risk: 1 },
+      { text: "撤退する", next: "retreat" }
+    ]
+  },
 
-red:{
-text:"革命度が危険域へ到達。<br><br>赤文字が画面全体を覆う。",
-choices:[
-{t:"☭ 永久革命を継続",n:"true",r:30,h:10,s:-20,route:"革命過激派"},
-{t:"🧯 緊急停止",n:"good",r:-10,h:-5,s:10,route:"生活兵站派"}
-]
-},
+  heavyGift: {
+    text: "重い。\n好意ではなく圧力として解釈される危険が出た。",
+    choices: [
+      { text: "すぐ軽く謝る", next: "listen", like: 1 },
+      { text: "見返りを期待する", next: "badEnd", risk: 3 }
+    ]
+  },
 
-good:{
-text:"【GOOD END】<br><br>革命は延期された。<br><br>だが補給線は維持された。",
-choices:[
-{t:"🔁 最初から",n:"reset",r:0,h:0,s:0}
-]
-},
+  leaflet: {
+    text: "ビラは風に舞い、数人が振り返る。\n宣伝戦は成功しつつあるが、警戒も上がる。",
+    choices: [
+      { text: "短く演説する", next: "shortSpeech", like: 1 },
+      { text: "長く演説する", next: "longSpeech", risk: 2, supply: -1 },
+      { text: "SNSにも投稿する", next: "sns", risk: 1 },
+      { text: "撤収する", next: "retreat" }
+    ]
+  },
 
-true:{
-text:"【TRUE END】<br><br>永久革命達成。<br><br>第四インターナショナル万歳。",
-choices:[
-{t:"🔁 最初から",n:"reset",r:0,h:0,s:0}
-]
-},
+  shortSpeech: {
+    text: "短い演説は刺さった。\n燃費がよく、騒音も少ない。優秀な小口径砲である。",
+    choices: [
+      { text: "ルミちゃんに報告する", next: "greet", like: 1 },
+      { text: "補給へ向かう", next: "supplyCheck", supply: 1 },
+      { text: "勝利宣言する", next: "goodEnd" }
+    ]
+  },
 
-archiveEnd:{
-text:"【ARCHIVE END】<br><br>黒背景赤文字文化は、静かに保存された。",
-choices:[
-{t:"🔁 最初から",n:"reset",r:0,h:0,s:0}
-]
-}
+  longSpeech: {
+    text: "長すぎた。\n聴衆の半分はラーメン屋を見ている。",
+    choices: [
+      { text: "短く締め直す", next: "shortSpeech" },
+      { text: "さらに続ける", next: "badEnd", risk: 3 },
+      { text: "SNSへ逃がす", next: "sns" }
+    ]
+  },
+
+  sns: {
+    text: "投稿は少し伸びた。\n革命はアルゴリズムとの戦いでもある。",
+    choices: [
+      { text: "一投稿で止める", next: "goodEnd", like: 1 },
+      { text: "連投する", next: "badEnd", risk: 3 },
+      { text: "ルミちゃんに見せる", next: "deepTalk", like: 1 }
+    ]
+  },
+
+  supplyCheck: {
+    text: "残金、通信量、食料、気力を点検した。\n兵站は細いが、まだ切れていない。",
+    choices: [
+      { text: "節約作戦を発動", next: "savePlan", supply: 2 },
+      { text: "コンビニへ進軍", next: "store", supply: -1 },
+      { text: "Wi-Fi圏へ移動", next: "wifi", supply: 1 },
+      { text: "最初へ戻る", next: "start" }
+    ]
+  },
+
+  savePlan: {
+    text: "節約成功。\n支出を抑え、行動余力を確保した。\nこれは現代生活の持久戦である。",
+    choices: [
+      { text: "ルミちゃんへ向かう", next: "greet", like: 1 },
+      { text: "さらに節制する", next: "goodEnd", supply: 1 },
+      { text: "気晴らしにSNSを見る", next: "sns", risk: 1 }
+    ]
+  },
+
+  store: {
+    text: "コンビニは便利だが単価が高い。\n補給速度は高いが、継戦能力を削る。",
+    choices: [
+      { text: "最低限だけ買う", next: "savePlan", supply: 1 },
+      { text: "豪遊する", next: "badEnd", supply: -3 },
+      { text: "水だけ買う", next: "wifi" }
+    ]
+  },
+
+  wifi: {
+    text: "Wi-Fi圏に到達。\n通信弾薬の消費を抑えた。これは小さな勝利だ。",
+    choices: [
+      { text: "GitHubを更新する", next: "goodEnd" },
+      { text: "動画を見すぎる", next: "badEnd", risk: 2 },
+      { text: "ルミちゃんに連絡する", next: "greet", like: 1 }
+    ]
+  },
+
+  observe: {
+    text: "観察は情報戦の基本。\n焦らず相手の癖、空気、距離感を測る。",
+    choices: [
+      { text: "今なら話しかける", next: "greet", like: 1 },
+      { text: "もう少し観察する", next: "deepObserve" },
+      { text: "撤退する", next: "retreat" }
+    ]
+  },
+
+  deepObserve: {
+    text: "観察しすぎた。\n慎重さは武器だが、機会損失も発生する。",
+    choices: [
+      { text: "勇気を出して挨拶", next: "greet", like: 1 },
+      { text: "何もせず帰る", next: "retreat" },
+      { text: "SNSだけ見る", next: "sns", risk: 1 }
+    ]
+  },
+
+  deepTalk: {
+    text: "会話は深まった。\n相手の話を尊重し、自分の温度を少しだけ出した。",
+    choices: [
+      { text: "ここで切り上げる", next: "goodEnd", like: 1 },
+      { text: "次の約束を軽く提案", next: "promise", like: 2 },
+      { text: "急に距離を詰める", next: "badEnd", risk: 3 }
+    ]
+  },
+
+  promise: {
+    text: "軽い提案は通った。\n圧力をかけない約束は、維持費が低く成功率が高い。",
+    choices: [
+      { text: "勝利エンドへ", next: "trueEnd", like: 1 },
+      { text: "調子に乗る", next: "badEnd", risk: 2 }
+    ]
+  },
+
+  joke: {
+    text: "冗談は少し滑った。\n空気がシベリヤ送り寸前まで冷える。",
+    choices: [
+      { text: "すぐ謝る", next: "listen", like: 1 },
+      { text: "押し通す", next: "badEnd", risk: 3 },
+      { text: "撤退する", next: "retreat" }
+    ]
+  },
+
+  retreat: {
+    text: "撤退は敗北ではない。再編成である。\n弾薬、燃料、士気を整えれば再出撃できる。",
+    choices: [
+      { text: "再出撃する", next: "start" },
+      { text: "補給線を確認する", next: "supplyCheck", supply: 1 }
+    ]
+  },
+
+  goodEnd: {
+    text: "小勝利。\n戦線は維持された。\n派手ではないが、こういう成功が一番強い。",
+    choices: [
+      { text: "もう一度遊ぶ", next: "reset" }
+    ]
+  },
+
+  trueEnd: {
+    text: "大勝利。\n距離感、補給、警戒管理が噛み合った。\n革命戦線は無理なく前進した。",
+    choices: [
+      { text: "最初から遊ぶ", next: "reset" }
+    ]
+  },
+
+  badEnd: {
+    text: "作戦失敗。\n原因は押しすぎ、消費しすぎ、警戒上昇のどれかだ。\nだが再起動できる者は強い。",
+    choices: [
+      { text: "再起動する", next: "reset" }
+    ]
+  }
 };
 
-function render(){
-document.getElementById("revText").innerText=state.rev;
-document.getElementById("humText").innerText=state.hum;
-document.getElementById("sanText").innerText=state.san;
-
-document.getElementById("revBar").style.width=state.rev+"%";
-document.getElementById("humBar").style.width=state.hum+"%";
-document.getElementById("sanBar").style.width=state.san+"%";
-
-document.getElementById("routeText").innerText=state.route;
-
-const sc=scenes[state.scene];
-document.getElementById("story").innerHTML=sc.text;
-
-let html="";
-sc.choices.forEach((c,i)=>{
-html+=`<button onclick="pick(${i})">${c.t}</button>`;
-});
-
-document.getElementById("choices").innerHTML=html;
+function updateStatus() {
+  document.getElementById("like").textContent = state.like;
+  document.getElementById("supply").textContent = state.supply;
+  document.getElementById("risk").textContent = state.risk;
 }
 
-function pick(i){
-const sc=scenes[state.scene];
-const c=sc.choices[i];
+function apply(choice) {
+  state.like += choice.like || 0;
+  state.supply += choice.supply || 0;
+  state.risk += choice.risk || 0;
 
-if(c.n==="reset"){
-state={rev:60,hum:70,san:55,route:"未確定",scene:"start"};
-render();
-return;
+  if (state.supply <= 0) {
+    showScene("badEnd");
+    return;
+  }
+  if (state.risk >= 6) {
+    showScene("badEnd");
+    return;
+  }
+  if (choice.next === "reset") {
+    state = { like: 0, supply: 5, risk: 0 };
+    showScene("start");
+    return;
+  }
+  showScene(choice.next);
 }
 
-state.rev+=c.r;
-state.hum+=c.h;
-state.san+=c.s;
-state.route=c.route || state.route;
-state.scene=c.n;
+function showScene(id) {
+  const scene = scenes[id];
+  document.getElementById("text").textContent = scene.text;
 
-state.rev=Math.max(0,Math.min(100,state.rev));
-state.hum=Math.max(0,Math.min(100,state.hum));
-state.san=Math.max(0,Math.min(100,state.san));
+  const choicesDiv = document.getElementById("choices");
+  choicesDiv.innerHTML = "";
 
-render();
+  scene.choices.forEach(choice => {
+    const btn = document.createElement("button");
+    btn.textContent = choice.text;
+    btn.onclick = () => apply(choice);
+    choicesDiv.appendChild(btn);
+  });
 
-if(navigator.vibrate){
-navigator.vibrate(35);
+  updateStatus();
 }
-}
 
-render();
+showScene("start");
 </script>
 
 </body>
